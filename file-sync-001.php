@@ -18,7 +18,7 @@ $filesystem_remote = new Filesystem(new Adapter_FTP([
     'password' => 'images',
 
     /** optional config settings **/
-    /*'port' => 21, */
+    'port' => 20,
     'root' => $remote_path,
     'passive' => false,
     'ssl' => false,
@@ -30,8 +30,8 @@ $manager->mountFilesystem('local', $filesystem_local);
 $manager->mountFilesystem('ftp', $filesystem_remote);
 
 
-$contents = $manager->listContents('local://testdir', true);
-var_dump($contents);
+//$contents = $manager->listContents('local://testdir', true);
+//var_dump($contents);
 
 $ftp_files = $manager->listContents('ftp://'. $remote_path, true);
 
@@ -60,6 +60,12 @@ else
       //copy file from ftp
       $status_copy = $manager->copy($remotefile, $localfile);
       echo "File Transfer Status = (". $status_copy . ")</br>";
+    }
+    elseif ($manager->getTimestamp($remotefile) > $manager->getTimestamp($localfile))
+    {
+      //copy file from ftp
+      $status_copy = $manager->copy($remotefile, $localfile);
+      echo "File Transfer Status = (". $status_copy . ")</br>";      
     }
     
     echo "Remote Exists? ". $file_exists_r . "</br>";
